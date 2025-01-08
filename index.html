@@ -2,11 +2,154 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Filtro Piedra</title>
+    <title>Filtro-Piedra</title>
+
+    <style>
+      /* Estilos de los botones */
+      #captureButton, #startRecordingButton, #stopRecordingButton {
+        position: absolute;
+        z-index: 10; /* Asegúrate de que tenga un z-index alto */
+        transition: transform 0.2s ease; /* Transición suave */
+        transform-origin: center;
+      }
+
+      #captureButton {
+        width: 80px;
+        height: 80px;
+        border: none;
+        background: url('https://cdn.glitch.global/cba16981-afa0-49c7-9521-0c5f904a2f33/camarav2.png?v=1726788936473') no-repeat center;
+        background-size: cover;
+        border-radius: 80%;
+        overflow: hidden;
+        bottom: 3%; /* Ajusta la posición según sea necesario */
+        left: 5%; /* Centra horizontalmente */
+      }
+
+      #startRecordingButton {
+        width: 65px;
+        height: 65px;
+        border: none;
+        background: url('https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/recordingv2.png?v=1726858940288') no-repeat center;
+        background-size: cover;
+        border-radius: 80%;
+        overflow: hidden;
+        bottom: 4%; /* Ajusta la posición según sea necesario */
+        left: 76%;
+      }
+
+      #stopRecordingButton {
+        width: 65px;
+        height: 65px;
+        border: none;
+        background: url('https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/stop.png?v=1726858129411') no-repeat center;
+        background-size: cover;
+        border-radius: 80%;
+        overflow: hidden;
+        bottom: 4%; /* Ajusta la posición según sea necesario */
+        left: 76%;
+        display: none; /* Solo se muestra después de comenzar la grabación */
+      }
+
+      /* Cuando el botón es clicado */
+      #captureButton:active, #startRecordingButton:active, #stopRecordingButton:active {
+        transform: scale(1.2); /* Escala el botón un 20% más grande */
+      }
+    </style>
   </head>
   <body>
     <canvas id="canvas"></canvas>
-    <script type="module" src="/src/main.ts"></script>
+
+    <!-- Botones para captura y grabación -->
+    <button id="captureButton"></button>
+    <button id="startRecordingButton"></button>
+    <button id="stopRecordingButton"></button>
+
+    <script>
+      const captureButton = document.getElementById("captureButton");
+      const startRecordingButton = document.getElementById("startRecordingButton");
+      const stopRecordingButton = document.getElementById("stopRecordingButton");
+      const canvas = document.getElementById("canvas");
+      const ctx = canvas.getContext("2d");
+
+      let mediaStream = null;
+      let mediaRecorder = null;
+      let recordedChunks = [];
+
+      // Función para iniciar la cámara
+      async function startCamera() {
+        try {
+          // Detener la cámara si ya está en uso
+          if (mediaStream) {
+            mediaStream.getTracks().forEach(track => track.stop());
+          }
+
+          // Iniciar el flujo de la cámara
+          mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
+          const videoElement = document.createElement("video");
+          videoElement.srcObject = mediaStream;
+          videoElement.play();
+          videoElement.onplaying = () => {
+            canvas.width = videoElement.videoWidth;
+            canvas.height = videoElement.videoHeight;
+          };
+          videoElement.onplay = () => {
+            // Actualiza el canvas con el stream de video
+            function draw() {
+              ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
+              requestAnimationFrame(draw);
+            }
+            draw();
+          };
+        } catch (err) {
+          console.error("Error al acceder a la cámara: ", err);
+        }
+      }
+
+      // Captura una foto
+      captureButton.addEventListener("click", () => {
+        console.log("Capture button clicked");
+        const imageData = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = imageData;
+        link.download = "captura.png";
+        link.click();
+      });
+
+      // Inicia la grabación
+      startRecordingButton.addEventListener("click", () => {
+        console.log("Start Recording button clicked");
+
+        recordedChunks = []; // Resetear los fragmentos grabados
+        mediaRecorder = new MediaRecorder(mediaStream);
+        mediaRecorder.ondataavailable = (event) => {
+          recordedChunks.push(event.data);
+        };
+        mediaRecorder.onstop = () => {
+          const blob = new Blob(recordedChunks, { type: "video/webm" });
+          const videoUrl = URL.createObjectURL(blob);
+          const link = document.createElement("a");
+          link.href = videoUrl;
+          link.download = "video_grabado.webm";
+          link.click();
+        };
+        mediaRecorder.start();
+        startRecordingButton.style.display = "none";
+        stopRecordingButton.style.display = "block";
+      });
+
+      // Detiene la grabación
+      stopRecordingButton.addEventListener("click", () => {
+        console.log("Stop Recording button clicked");
+        mediaRecorder.stop();
+        mediaStream.getTracks().forEach(track => track.stop());
+        startRecordingButton.style.display = "block";
+        stopRecordingButton.style.display = "none";
+      });
+
+      // Inicia la cámara cuando cargue la página
+      window.onload = startCamera;
+    </script>
   </body>
 </html>
