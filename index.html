@@ -7,6 +7,25 @@
     <title>Filtro-Piedra</title>
 
     <style>
+      /* Asegurando que la cámara ocupe toda la pantalla */
+      html, body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
+        overflow: hidden;
+        font-family: "Segoe", sans-serif;
+      }
+
+      /* El canvas ocupa toda la pantalla */
+      #canvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+      }
+
       /* Estilos de los botones */
       #captureButton, #startRecordingButton, #stopRecordingButton {
         position: absolute;
@@ -57,6 +76,7 @@
         transform: scale(1.2); /* Escala el botón un 20% más grande */
       }
     </style>
+    <script type="module" crossorigin src="/Filtro-Piedra/assets/index-Dn_c9yic.js"></script>
   </head>
   <body>
     <canvas id="canvas"></canvas>
@@ -66,90 +86,32 @@
     <button id="startRecordingButton"></button>
     <button id="stopRecordingButton"></button>
 
+
     <script>
+      // Aquí agregas el comportamiento de los botones
       const captureButton = document.getElementById("captureButton");
       const startRecordingButton = document.getElementById("startRecordingButton");
       const stopRecordingButton = document.getElementById("stopRecordingButton");
-      const canvas = document.getElementById("canvas");
-      const ctx = canvas.getContext("2d");
 
-      let mediaStream = null;
-      let mediaRecorder = null;
-      let recordedChunks = [];
-
-      // Función para iniciar la cámara
-      async function startCamera() {
-        try {
-          // Detener la cámara si ya está en uso
-          if (mediaStream) {
-            mediaStream.getTracks().forEach(track => track.stop());
-          }
-
-          // Iniciar el flujo de la cámara
-          mediaStream = await navigator.mediaDevices.getUserMedia({ video: true });
-          const videoElement = document.createElement("video");
-          videoElement.srcObject = mediaStream;
-          videoElement.play();
-          videoElement.onplaying = () => {
-            canvas.width = videoElement.videoWidth;
-            canvas.height = videoElement.videoHeight;
-          };
-          videoElement.onplay = () => {
-            // Actualiza el canvas con el stream de video
-            function draw() {
-              ctx.drawImage(videoElement, 0, 0, canvas.width, canvas.height);
-              requestAnimationFrame(draw);
-            }
-            draw();
-          };
-        } catch (err) {
-          console.error("Error al acceder a la cámara: ", err);
-        }
-      }
-
-      // Captura una foto
+      // Ejemplo de comportamiento de los botones
       captureButton.addEventListener("click", () => {
         console.log("Capture button clicked");
-        const imageData = canvas.toDataURL("image/png");
-        const link = document.createElement("a");
-        link.href = imageData;
-        link.download = "captura.png";
-        link.click();
+        // Agregar la lógica de captura aquí
       });
 
-      // Inicia la grabación
       startRecordingButton.addEventListener("click", () => {
         console.log("Start Recording button clicked");
-
-        recordedChunks = []; // Resetear los fragmentos grabados
-        mediaRecorder = new MediaRecorder(mediaStream);
-        mediaRecorder.ondataavailable = (event) => {
-          recordedChunks.push(event.data);
-        };
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(recordedChunks, { type: "video/webm" });
-          const videoUrl = URL.createObjectURL(blob);
-          const link = document.createElement("a");
-          link.href = videoUrl;
-          link.download = "video_grabado.webm";
-          link.click();
-        };
-        mediaRecorder.start();
         startRecordingButton.style.display = "none";
         stopRecordingButton.style.display = "block";
+        // Agregar la lógica de iniciar grabación aquí
       });
 
-      // Detiene la grabación
       stopRecordingButton.addEventListener("click", () => {
         console.log("Stop Recording button clicked");
-        mediaRecorder.stop();
-        mediaStream.getTracks().forEach(track => track.stop());
         startRecordingButton.style.display = "block";
         stopRecordingButton.style.display = "none";
+        // Agregar la lógica de detener grabación aquí
       });
-
-      // Inicia la cámara cuando cargue la página
-      window.onload = startCamera;
     </script>
   </body>
 </html>
