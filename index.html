@@ -2,116 +2,16 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/Filtro-Piedra/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Filtro-Piedra</title>
-
-    <style>
-      /* Asegurando que la cámara ocupe toda la pantalla */
-      html, body {
-        margin: 0;
-        padding: 0;
-        height: 100%;
-        width: 100%;
-        overflow: hidden;
-        font-family: "Segoe", sans-serif;
-      }
-
-      /* El canvas ocupa toda la pantalla */
-      #canvas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-      }
-
-      /* Estilos de los botones */
-      #captureButton, #startRecordingButton, #stopRecordingButton {
-        position: absolute;
-        z-index: 10; /* Asegúrate de que tenga un z-index alto */
-        transition: transform 0.2s ease; /* Transición suave */
-        transform-origin: center;
-      }
-
-      #captureButton {
-        width: 80px;
-        height: 80px;
-        border: none;
-        background: url('https://cdn.glitch.global/cba16981-afa0-49c7-9521-0c5f904a2f33/camarav2.png?v=1726788936473') no-repeat center;
-        background-size: cover;
-        border-radius: 80%;
-        overflow: hidden;
-        bottom: 3%; /* Ajusta la posición según sea necesario */
-        left: 5%; /* Centra horizontalmente */
-      }
-
-      #startRecordingButton {
-        width: 65px;
-        height: 65px;
-        border: none;
-        background: url('https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/recordingv2.png?v=1726858940288') no-repeat center;
-        background-size: cover;
-        border-radius: 80%;
-        overflow: hidden;
-        bottom: 4%; /* Ajusta la posición según sea necesario */
-        left: 76%;
-      }
-
-      #stopRecordingButton {
-        width: 65px;
-        height: 65px;
-        border: none;
-        background: url('https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/stop.png?v=1726858129411') no-repeat center;
-        background-size: cover;
-        border-radius: 80%;
-        overflow: hidden;
-        bottom: 4%; /* Ajusta la posición según sea necesario */
-        left: 76%;
-        display: none; /* Solo se muestra después de comenzar la grabación */
-      }
-
-      /* Cuando el botón es clicado */
-      #captureButton:active, #startRecordingButton:active, #stopRecordingButton:active {
-        transform: scale(1.2); /* Escala el botón un 20% más grande */
-      }
-    </style>
+    <title>Filtro Piedra</title>
     <script type="module" crossorigin src="/Filtro-Piedra/assets/index-Dn_c9yic.js"></script>
   </head>
   <body>
     <canvas id="canvas"></canvas>
-
-    <!-- Botones para captura y grabación -->
-    <button id="captureButton"></button>
-    <button id="startRecordingButton"></button>
-    <button id="stopRecordingButton"></button>
-
-
-    <script>
-      // Aquí agregas el comportamiento de los botones
-      const captureButton = document.getElementById("captureButton");
-      const startRecordingButton = document.getElementById("startRecordingButton");
-      const stopRecordingButton = document.getElementById("stopRecordingButton");
-
-      // Ejemplo de comportamiento de los botones
-      captureButton.addEventListener("click", () => {
-        console.log("Capture button clicked");
-        // Agregar la lógica de captura aquí
-      });
-
-      startRecordingButton.addEventListener("click", () => {
-        console.log("Start Recording button clicked");
-        startRecordingButton.style.display = "none";
-        stopRecordingButton.style.display = "block";
-        // Agregar la lógica de iniciar grabación aquí
-      });
-
-      stopRecordingButton.addEventListener("click", () => {
-        console.log("Stop Recording button clicked");
-        startRecordingButton.style.display = "block";
-        stopRecordingButton.style.display = "none";
-        // Agregar la lógica de detener grabación aquí
-      });
-    </script>
+    <div id="controls">
+      <button id="capturePhoto">Capture Photo</button>
+      <button id="startStopRecording">Start Recording</button>
+      <button id="downloadVideo" style="display: none;">Download Video</button>
+    </div>
   </body>
 </html>
