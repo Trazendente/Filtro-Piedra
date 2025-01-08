@@ -4,14 +4,32 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Filtro Piedra</title>
-    <script type="module" crossorigin src="/Filtro-Piedra/assets/index-Dn_c9yic.js"></script>
+    <style>
+      #controls button {
+        background: none;
+        border: none;
+        padding: 0;
+        cursor: pointer;
+      }
+      #controls button img {
+        width: 50px; /* Ajusta el tamaño de las imágenes como desees */
+        height: auto;
+      }
+    </style>
+    <script type="module" crossorigin src="/Filtro-Piedra/assets/index-ehlmbuJG.js"></script>
   </head>
   <body>
     <canvas id="canvas"></canvas>
     <div id="controls">
-      <button id="capturePhoto">Capture Photo</button>
-      <button id="startStopRecording">Start Recording</button>
-      <button id="downloadVideo" style="display: none;">Download Video</button>
+      <button id="capturePhoto">
+        <img src="https://cdn.glitch.global/cba16981-afa0-49c7-9521-0c5f904a2f33/camarav2.png?v=1726788936473" alt="Capture Photo">
+      </button>
+      <button id="startStopRecording">
+        <img src="https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/recordingv2.png?v=1726858940288" alt="Start Recording">
+      </button>
+      <button id="stopRecording" style="display:none;">
+        <img src="https://cdn.glitch.global/40cefa43-2503-411d-9aaf-d230f3ac7843/stop.png?v=1726858129411" alt="Stop Recording">
+      </button>
     </div>
   </body>
 </html>
