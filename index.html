@@ -83,16 +83,34 @@
         mediaRecorder.ondataavailable = (event) => {
           recordedChunks.push(event.data);
         };
+        function getPlatform() {
+  const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+  if (/android/i.test(userAgent)) {
+    return 'android';
+  }
+  if (/iPad|iPhone|iPod/.test(userAgent) && !window.MSStream) {
+    return 'ios';
+  }
+  return 'other';
+}
 
-        mediaRecorder.onstop = () => {
-          const blob = new Blob(recordedChunks, { type: 'video/webm' });
-          const url = URL.createObjectURL(blob);
-          const link = document.createElement('a');
-          link.href = url;
-          link.download = 'recording.webm';
-          link.click();
-          recordedChunks = [];
-        };
+mediaRecorder.onstop = () => {
+  const platform = getPlatform();
+  let mimeType = 'video/webm';
+  let fileExtension = 'webm';
+
+  if (platform === 'ios') {
+    mimeType = 'video/mp4';
+    fileExtension = 'mp4';
+  }
+  const blob = new Blob(recordedChunks, { type: mimeType });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `recording.${fileExtension}`;
+  link.click();
+  recordedChunks = [];
+};
 
         mediaRecorder.start();
         isRecording = true;
