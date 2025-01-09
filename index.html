@@ -5,18 +5,54 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Filtro Piedra</title>
     <style>
+      body {
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000; /* Fondo oscuro para la cámara */
+      }
+
+      #canvas {
+        width: 100%;
+        height: 100%;
+        object-fit: cover; /* Asegura que la imagen de la cámara ocupe toda el área */
+      }
+
+      #controls {
+        position: absolute;
+        bottom: 20px;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        gap: 15px;
+      }
+
       #controls button {
         background: none;
         border: none;
-        padding: 0;
+        padding: 10px;
         cursor: pointer;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
       }
+
       #controls button img {
-        width: 50px; /* Ajusta el tamaño de las imágenes como desees */
+        width: 10vw; /* Usar unidades relativas para hacer los botones responsive */
         height: auto;
+        transform: scaleX(1); /* Asegura que la imagen no esté volteada */
+      }
+
+      @media (max-width: 600px) {
+        #controls button img {
+          width: 20vw; /* Ajustar el tamaño de los botones en pantallas pequeñas */
+        }
       }
     </style>
-    <script type="module" crossorigin src="/Filtro-Piedra/assets/index-ehlmbuJG.js"></script>
+    <script type="module" crossorigin src="/Filtro-Piedra/assets/index-CXpUk8tD.js"></script>
   </head>
   <body>
     <canvas id="canvas"></canvas>
@@ -32,6 +68,7 @@
       </button>
     </div>
     <script>
+      const canvas = document.getElementById('canvas');
       const startRecordingButton = document.getElementById('startRecordingButton');
       const stopRecordingButton = document.getElementById('stopRecordingButton');
       let isRecording = false;
